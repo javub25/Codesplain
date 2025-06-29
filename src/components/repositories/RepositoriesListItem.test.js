@@ -26,17 +26,20 @@ const getGithubUrl = () =>
     return {GithubUrl};
 }
 
-const ensureGithubUrlExists = (GithubUrl) => 
-    expect(GithubUrl).toBeInTheDocument();
-
 const getFileIcon = async() => {
     const fileIcon = await screen.findByRole('img', { name: /javascript/i });
-
     return {fileIcon};
 }
 
+const ensureGithubUrlExists = (GithubUrl) => 
+    expect(GithubUrl).toBeInTheDocument();
+
 const ensureGithubUrlIsCorrect = (GithubUrl) => 
     expect(GithubUrl).toHaveAttribute('href', mockRepository.html_url)
+
+const ensureIconHasClasses = (fileIcon) => 
+    expect(fileIcon).toHaveClass("icon", "js-icon");
+
 
 describe("Github Repository Link Test cases", () => {
     test('it should shows github repository link for one repository', async () => 
@@ -61,7 +64,6 @@ describe("File Icon Test cases", () => {
         showRepositoryListItem();
         const {fileIcon} = await getFileIcon();
 
-        expect(fileIcon).toHaveClass("icon", "js-icon");
+        ensureIconHasClasses(fileIcon);
     })
 })
-
