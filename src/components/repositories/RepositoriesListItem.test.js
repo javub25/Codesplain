@@ -29,10 +29,39 @@ const getGithubUrl = () =>
 const ensureGithubUrlExists = (GithubUrl) => 
     expect(GithubUrl).toBeInTheDocument();
 
+const getFileIcon = async() => {
+    const fileIcon = await screen.findByRole('img', { name: /javascript/i });
 
-test('it should shows github repository link for each repository', () => 
-{
-    showRepositoryListItem();
-    const {GithubUrl} = getGithubUrl();
-    ensureGithubUrlExists(GithubUrl);
+    return {fileIcon};
+}
+
+const ensureGithubUrlIsCorrect = (GithubUrl) => 
+    expect(GithubUrl).toHaveAttribute('href', mockRepository.html_url)
+
+describe("Github Repository Link Test cases", () => {
+    test('it should shows github repository link for one repository', async () => 
+    {
+        showRepositoryListItem();
+        const {GithubUrl} = getGithubUrl();
+        await getFileIcon();
+        ensureGithubUrlExists(GithubUrl);
+    })
+
+    test('it should shows the properly url for github repository', async() => {
+        showRepositoryListItem();
+        const {GithubUrl} = getGithubUrl();
+        await getFileIcon();
+
+        ensureGithubUrlIsCorrect(GithubUrl);
+    })
 })
+
+describe("File Icon Test cases", () => {
+    test('it should has icon and js-icon classes', async() => {
+        showRepositoryListItem();
+        const {fileIcon} = await getFileIcon();
+
+        expect(fileIcon).toHaveClass("icon", "js-icon");
+    })
+})
+
