@@ -7,7 +7,9 @@ const mockRepository = {
     full_name: 'facebook/react',
     language: 'JavaScript',
     description: 'A js library',
-    owner: 'facebook',
+    owner: {
+        login: 'facebook',
+    },
     name: 'react.js',
     html_url: 'https://github.com/facebook/react'
 }
@@ -26,6 +28,11 @@ const getGithubUrl = () =>
     return {GithubUrl};
 }
 
+const getCodeEditorUrl = () =>  {
+    const codeEditorUrl = screen.getByRole('link', { name: /code editor/i });
+    return {codeEditorUrl};
+}
+
 const getFileIcon = async() => {
     const fileIcon = await screen.findByRole('img', { name: /javascript/i });
     return {fileIcon};
@@ -39,6 +46,10 @@ const ensureGithubUrlIsCorrect = (GithubUrl) =>
 
 const ensureIconHasClasses = (fileIcon) => 
     expect(fileIcon).toHaveClass("icon", "js-icon");
+
+const ensureValidCodeEditorUrl = (codeEditorUrl) => {
+    expect(codeEditorUrl).toHaveAttribute('href', `/repositories/${mockRepository.full_name}`);
+}
 
 
 describe("Github Repository Link Test cases", () => {
@@ -60,10 +71,21 @@ describe("Github Repository Link Test cases", () => {
 })
 
 describe("File Icon Test cases", () => {
-    test('it should has icon and js-icon classes', async() => {
+    test('shows file icon with the correct language icon', async() => {
         showRepositoryListItem();
         const {fileIcon} = await getFileIcon();
 
         ensureIconHasClasses(fileIcon);
+    })
+})
+
+describe("Code Editor test case", () => 
+{
+    test('it should shows the properly code editor link', async() => {
+        showRepositoryListItem();
+        await getFileIcon();
+
+        const {codeEditorUrl} = getCodeEditorUrl();
+        ensureValidCodeEditorUrl(codeEditorUrl);
     })
 })
