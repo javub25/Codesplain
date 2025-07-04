@@ -161,7 +161,6 @@ describe('Repositories List test cases', () => {
 
         ensurePythonTextIsPresent();
         ensureJavaTextIsPresent();
-        screen.debug();
     })
 });
 
