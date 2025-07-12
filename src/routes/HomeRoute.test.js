@@ -1,9 +1,7 @@
 import {render, screen, within} from '@testing-library/react';
-import {setupServer} from 'msw/node';
-import {rest} from 'msw';
 import HomeRoute from './HomeRoute';
 import {MemoryRouter} from 'react-router-dom';
-
+import {createFakeServer} from '../test/server/createFakeServer.js';
 const getAPIData = (currentRepoLanguage) => {
 
     const APIData = {
@@ -22,35 +20,18 @@ const getAPIData = (currentRepoLanguage) => {
     return {APIData};
 }
 
-const APIRequest = [
-    
-    rest.get('api/repositories', (req, res, ctx) => {
+createFakeServer([
+    {
+        path: '/api/repositories',
+        method: 'get',
+        res: (req) => {
+            const currentLanguageRepo = req.url.searchParams.get('q').split('language:')[1];
 
-     const currentLanguageRepo = req.url.searchParams.get('q').split('language:')[1];
-     
-     const {APIData} = getAPIData(currentLanguageRepo);
-
-      return res(
-            ctx.json(APIData)
-        )
-    })
-]
-
-const server = setupServer(...APIRequest);
-
-beforeAll(() => 
-{
-    server.listen();
-})
-afterEach(() => 
-{
-    server.resetHandlers();
-})
-
-afterAll(() => 
-{
-    server.close();
-})
+            const {APIData} = getAPIData(currentLanguageRepo);
+            return APIData
+        }
+    }
+])
 
 
 const showHomeRoute = () => 

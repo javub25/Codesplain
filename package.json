@@ -42,7 +42,8 @@
     "start:client": "react-scripts start",
     "start:server": "nodemon --watch server server/index.mjs",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --detectOpenHandles",
+    "test:debug":"react-scripts --inspect-brk test --runInBand --no-cache",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
